@@ -5,6 +5,8 @@ public struct CommandLineOptions {
     public var showSeconds: Bool?
     public var fontName: String?
     public var showInDock: Bool?
+    public var newInstance: Bool = false
+    public var quit: Bool = false
 
     public init(isDigital: Bool? = nil, showSeconds: Bool? = nil, fontName: String? = nil, showInDock: Bool? = nil) {
         self.isDigital = isDigital
@@ -61,6 +63,7 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         window.level = .floating
+        window.collectionBehavior.insert(.canJoinAllSpaces)
         window.isOpaque = false
         window.alphaValue = config.opacity
         switch config.windowShadow {

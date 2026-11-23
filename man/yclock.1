@@ -8,7 +8,7 @@ yclock \- a simple analog and digital clock for macOS
 .B yclock
 is a simple clock application for macOS, inspired by xclock from X11. It provides both analog and digital clock modes with customizable appearance through configuration files and command line options.
 .PP
-The clock window is draggable, translucent, and floats above other windows. It updates in real-time every second and supports optional seconds display.
+The clock window is draggable, translucent, floats above other windows, and is visible on all desktops. It updates in real-time every second and supports optional seconds display.
 .SH OPTIONS
 .TP
 .B \-\-digital
@@ -29,6 +29,12 @@ Show application in Dock and Cmd+Tab switcher. By default, the app runs as an ac
 .B \-\-font-name \fINAME\fR
 Specify font name for digital clock. If the font name contains spaces, enclose it in quotes.
 Examples: Menlo, Monaco, "Courier New", Helvetica
+.TP
+.B \-\-new-instance
+Start a new instance even if one is already running. Without it, launching yclock while another instance runs activates that instance and exits; other options are ignored.
+.TP
+.B \-\-quit
+Ask the running instance to quit and exit; never starts the app. Exits 0 on success or if no instance is running, 1 if the instance did not quit within 3 seconds. Other options are ignored.
 .TP
 .B \-\-help
 Display help message and exit
@@ -144,7 +150,7 @@ When the clock window is active:
 Toggle between digital and analog modes
 .TP
 .B ⌘F
-Toggle between normal and full-screen modes
+Toggle between normal and maximised modes
 .TP
 .B ⌘S
 Toggle seconds display on/off
