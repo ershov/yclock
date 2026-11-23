@@ -22,6 +22,7 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
     var options: CommandLineOptions
     var savedFrame: NSRect?
     var isMaximized = false
+    var unlockPresenter: ClickThroughPresenter?
 
     public init(options: CommandLineOptions = CommandLineOptions()) {
         self.options = options
@@ -33,8 +34,8 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
         let windowRect = NSRect(x: 100, y: 100, width: config.width * config.scale, height: config.height * config.scale)
 
         // Use command line option if provided, otherwise fall back to config
-        let showInDock = options.showInDock ?? config.showInDock
-        NSApp.setActivationPolicy(showInDock ? .regular : .accessory)
+        let showInDock = ActivationPolicies.effectiveShowInDock(option: options.showInDock, config: config)
+        NSApp.setActivationPolicy(ActivationPolicies.startup(showInDock: showInDock))
         window = NSWindow(contentRect: windowRect,
                          styleMask: [.titled, .fullSizeContentView],
                          backing: .buffered,
@@ -95,6 +96,10 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
         )
         window.contentView = clockView
         window.makeKeyAndOrderFront(nil)
+
+        if config.clickThrough {
+            unlockPresenter = ClickThroughPresenter(window: window, clockView: clockView, config: config, showInDock: showInDock)
+        }
 
         NSApp.activate(ignoringOtherApps: true)
         setupMenu()
@@ -159,6 +164,19 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
             window.setFrame(screenFrame, display: true, animate: true)
             isMaximized = true
         }
+    }
+
+    public func applicationDidBecomeActive(_ notification: Notification) {
+        unlockPresenter?.handle(.appActivated)
+    }
+
+    public func applicationDidResignActive(_ notification: Notification) {
+        unlockPresenter?.handle(.appDeactivated)
+    }
+
+    public func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        unlockPresenter?.handle(.appActivated)
+        return true
     }
 
     public func applicationWillTerminate(_ notification: Notification) {
