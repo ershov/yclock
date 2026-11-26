@@ -29,6 +29,11 @@ from X11 that you're used to on Linux and the BSDs.
   alt="yclock digital"
 />
 
+Examples of bundled minimalistic themes ([conf/](conf/)):
+
+<img src="doc/yclock-minimalistic-black.png" alt="yclock minimalistic black" width="150"/>
+<img src="doc/yclock-minimalistic-white.png" alt="yclock minimalistic white" width="150"/>
+
 ## Usage
 
 ```bash
